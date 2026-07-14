@@ -299,4 +299,219 @@
 <div class="nour-widget">
     <div class="nour-chat" id="nourChat">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><strong>🧑‍🏫 نور - معلمك الذكي</strong><button onclick="toggleNour()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button></div>
-        <div id="nourMessages" style="max-height:200px; overflow-y:auto;"><div class="nour-msg nour">👋 أهلاً! أنا نور. اسأ
+        <div id="nourMessages" style="max-height:200px; overflow-y:auto;"><div class="nour-msg nour">👋 أهلاً! أنا نور. اسألني أي شيء عن التعلم!</div></div>
+        <div class="nour-input"><input type="text" id="nourInput" placeholder="اسأل نور..." onkeydown="if(event.key==='Enter') sendToNour()"><button onclick="sendToNour()">📤</button><button onclick="startVoice()">🎤</button></div>
+    </div>
+    <div class="nour-avatar" onclick="toggleNour()">🧑‍🏫<div class="nour-dot"></div></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+    const state = { 
+        studentName: '', grade: '', xp: 0, level: 1,
+        coins: 0, gems: 0,
+        lessonsDone: 0, storiesDone: 0, gamesDone: 0, challengesDone: 0,
+        challengeAnswers: {}
+    };
+
+    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx7z8QeADQLw-rc3aNfESEI-XjtBLKtAdi1cR_RszX_a77qxOcJu6CnSO11174enzhk/exec';
+    const ADMIN_EMAIL = 'moaid3372@gmail.com';
+
+    function navigateTo(page) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        var target = document.getElementById('page-' + page);
+        if (target) target.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showToast(msg) {
+        var toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() { toast.classList.remove('show'); }, 3000);
+    }
+
+    // ═══════════════════ تسجيل ═══════════════════
+    function handleSignup() {
+        var nameInput = document.querySelector('#page-signup input[type="text"]');
+        var gradeInput = document.querySelector('#page-signup select');
+        var name = nameInput ? nameInput.value.trim() : '';
+        var grade = gradeInput ? gradeInput.value : '';
+        if (!name) name = 'طالب';
+        if (!grade || grade === 'اختر الصف *') grade = 'Primary 4';
+        state.studentName = name;
+        state.grade = grade;
+        updateDashboardName();
+        showToast('✅ تم التسجيل! أهلاً بك ' + name);
+        navigateTo('placement');
+    }
+
+    function updateDashboardName() {
+        var dn = document.getElementById('dashName');
+        var di = document.getElementById('dashInfo');
+        if (dn) dn.textContent = 'أهلاً، ' + state.studentName + '!';
+        if (di) di.textContent = 'الصف: ' + state.grade + ' | ⭐ ' + state.xp + ' XP | المستوى ' + state.level;
+    }
+
+    // ═══════════════════ تحدي المستوى ═══════════════════
+    var placementAnswers = {};
+
+    function selectPlacement(btn, qNum, ansIdx) {
+        var siblings = btn.parentElement.querySelectorAll('button');
+        siblings.forEach(function(b) { b.style.background = ''; b.style.borderColor = 'var(--border)'; });
+        btn.style.background = 'var(--primary-light)';
+        btn.style.borderColor = 'var(--primary)';
+        placementAnswers[qNum] = ansIdx;
+    }
+
+    function finishPlacement() {
+        var correct = { 1:0, 2:0, 3:0 };
+        var score = 0;
+        for (var i = 1; i <= 3; i++) { if (placementAnswers[i] === correct[i]) score++; }
+        var pct = Math.round((score / 3) * 100);
+        document.getElementById('placementArea').style.display = 'none';
+        document.querySelector('#page-placement .btn-primary.btn-lg').style.display = 'none';
+        var result = document.getElementById('placementResult');
+        result.style.display = 'block';
+        if (pct >= 66) {
+            state.xp = 500; state.level = 3;
+            result.innerHTML = '<div style="font-size:4rem;">🎯</div><h2>مستواك: متوسط</h2><p>أنت جاهز لرحلة ممتعة!</p><button class="btn btn-primary" onclick="goToDashboard()">🚀 ابدأ الرحلة</button>';
+        } else {
+            state.xp = 100; state.level = 1;
+            result.innerHTML = '<div style="font-size:4rem;">🌱</div><h2>مستواك: مبتدئ</h2><p>بداية رائعة لمغامرة التعلم!</p><button class="btn btn-primary" onclick="goToDashboard()">🚀 ابدأ الرحلة</button>';
+        }
+    }
+
+    function goToDashboard() {
+        updateDashboardName();
+        navigateTo('dashboard');
+        showToast('🎉 أهلاً بك يا ' + state.studentName + '!');
+    }
+
+    // ═══════════════════ التحديات ═══════════════════
+    function selectAnswer(btn, qNum, ansIdx) {
+        var siblings = btn.parentElement.querySelectorAll('button');
+        siblings.forEach(function(b) { b.style.background = ''; b.style.borderColor = 'var(--border)'; });
+        btn.style.background = 'var(--primary-light)';
+        btn.style.borderColor = 'var(--primary)';
+        state.challengeAnswers[qNum] = ansIdx;
+    }
+
+    function submitChallenge() {
+        var correct = { 1:0, 2:0, 3:0, 4:0, 5:0 };
+        var score = 0;
+        for (var i = 1; i <= 5; i++) { if (state.challengeAnswers[i] === correct[i]) score++; }
+        var pct = Math.round((score / 5) * 100);
+        document.getElementById('challengeArea').style.display = 'none';
+        document.querySelector('#page-challenge .btn-primary.btn-lg').style.display = 'none';
+        var result = document.getElementById('challengeResult');
+        result.style.display = 'block';
+        if (pct >= 85) {
+            result.innerHTML = '<div style="font-size:5rem;">🏆</div><h2 style="color:var(--success);">تهانينا! أنت بطل!</h2><p style="font-size:1.5rem;">نتيجتك: <strong>' + pct + '%</strong></p><button class="btn btn-primary" onclick="navigateTo(\'dashboard\')">🏠 العودة</button>';
+        } else {
+            result.innerHTML = '<div style="font-size:5rem;">💪</div><h2 style="color:var(--primary);">أحسنت!</h2><p>نتوقع منك المزيد. أنت على الطريق الصحيح.</p><p style="color:var(--text-muted);">📲 تم إرسال التقرير لولي الأمر</p><button class="btn btn-primary" onclick="navigateTo(\'dashboard\')">🏠 العودة</button>';
+        }
+        sendToGoogleSheets(state.studentName, 'تحدي', pct + '%');
+    }
+
+    // ═══════════════════ نور ═══════════════════
+    function toggleNour() { document.getElementById('nourChat').classList.toggle('open'); }
+    function sendToNour() {
+        var input = document.getElementById('nourInput');
+        var msg = input.value.trim();
+        if (!msg) return;
+        addNourMessage('أنت', msg, 'user');
+        input.value = '';
+        setTimeout(function() {
+            var reply = getNourReply(msg);
+            addNourMessage('نور', reply, 'nour');
+            if ('speechSynthesis' in window) { var u = new SpeechSynthesisUtterance(reply); u.lang = 'ar-SA'; u.rate = 0.9; window.speechSynthesis.speak(u); }
+        }, 800);
+    }
+    function addNourMessage(sender, text, type) {
+        var container = document.getElementById('nourMessages');
+        var div = document.createElement('div');
+        div.className = 'nour-msg ' + (type === 'nour' ? 'nour' : '');
+        div.innerHTML = '<strong>' + sender + ':</strong> ' + text;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+    function getNourReply(q) {
+        q = q.toLowerCase();
+        if (q.includes('معنى')||q.includes('يعني')) return 'أسأل عن أي كلمة وأنا أشرحها لك! 📖';
+        if (q.includes('قاعدة')||q.includes('grammar')) return 'القواعد زي أساس البيت. 🏠';
+        if (q.includes('تحدي')||q.includes('challenge')) return 'التحديات فرصة تثبت إنك بطل! 💪';
+        if (q.includes('خائف')||q.includes('صعب')||q.includes('help')) return 'متقلقش! أنا معك. 🤝';
+        return 'سؤال جميل! إسألني أي حاجة! 🌟';
+    }
+    function startVoice() {
+        if (!('webkitSpeechRecognition' in window)) { addNourMessage('نور', '🎤 الميكروفون غير مدعوم.', 'nour'); return; }
+        var r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        r.lang = 'ar-SA';
+        r.onresult = function(e) { document.getElementById('nourInput').value = e.results[0][0].transcript; sendToNour(); };
+        r.start();
+        addNourMessage('نور', '🎤 أنا أستمع... تكلم!', 'nour');
+    }
+
+    // ═══════════════════ قصص ═══════════════════
+    function openStory(type) {
+        var area = document.getElementById('storyArea');
+        if (!area) return;
+        area.style.display = 'block';
+        if (type === 'market') area.innerHTML = '<div class="card"><h3>سر السوق القديم</h3><p>دخل نور إلى دكان العم سيد...</p><button class="btn btn-outline btn-sm" onclick="storyChoice()">🔍 أبحث عن الكنز</button><p id="storyFeedback"></p></div>';
+        else if (type === 'aswan') area.innerHTML = '<div class="card"><h3>رحلة إلى أسوان</h3><p>وصل نور إلى أسوان مع أمينة...</p><button class="btn btn-outline btn-sm" onclick="storyChoice()">🚣 أبحر في النيل</button><p id="storyFeedback"></p></div>';
+        else if (type === 'cairo') area.innerHTML = '<div class="card"><h3>مغامرة في القاهرة</h3><p>في خان الخليلي...</p><button class="btn btn-outline btn-sm" onclick="storyChoice()">📚 أدخل المكتبة</button><p id="storyFeedback"></p></div>';
+        area.scrollIntoView({ behavior: 'smooth' });
+        sendToGoogleSheets(state.studentName, 'قصة', type);
+    }
+    function storyChoice() {
+        var fb = document.getElementById('storyFeedback');
+        if (fb) fb.innerHTML = '<span style="color:var(--success);">✅ اختيار رائع! +20 XP</span>';
+        showToast('✅ +20 XP');
+    }
+
+    // ═══════════════════ ألعاب ═══════════════════
+    function startGame(type) {
+        var area = document.getElementById('gameArea');
+        if (!area) return;
+        area.style.display = 'block';
+        if (type === 'vocab') area.innerHTML = '<div class="card" style="text-align:center;"><h3>⚡ تحدي المفردات</h3><p>ما معنى "Apple"؟</p><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this,true)">🍎 تفاحة</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this,false)">🍌 موز</button><p id="gameFeedback"></p></div>';
+        else if (type === 'grammar') area.innerHTML = '<div class="card" style="text-align:center;"><h3>🧠 صياد القواعد</h3><p>"She ___ a teacher."</p><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this,true)">is</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this,false)">am</button><p id="gameFeedback"></p></div>';
+        else area.innerHTML = '<div class="card" style="text-align:center;"><h3>🎮 لعبة</h3><p>اضغط للبدء</p><button class="btn btn-primary" onclick="document.getElementById(\'gameFeedback\').innerHTML=\'<span style=color:var(--success)>✅ +10 XP</span>\'">ابدأ</button><p id="gameFeedback"></p></div>';
+        area.scrollIntoView({ behavior: 'smooth' });
+        sendToGoogleSheets(state.studentName, 'لعبة', type);
+    }
+    function checkGameAnswer(btn, isCorrect) {
+        var fb = document.getElementById('gameFeedback');
+        if (!fb) return;
+        if (isCorrect) { btn.style.background = 'var(--success-light)'; fb.innerHTML = '<span style="color:var(--success);">✅ إجابة صحيحة! +10 XP</span>'; showToast('✅ +10 XP'); }
+        else { btn.style.background = 'var(--accent-light)'; fb.innerHTML = '<span style="color:var(--accent);">❌ حاول مرة أخرى</span>'; }
+    }
+
+    // ═══════════════════ Google Sheets ═══════════════════
+    function sendToGoogleSheets(studentName, activity, details) {
+        var data = { studentName: studentName, grade: state.grade, xp: state.xp, level: state.level, activity: activity, details: details };
+        fetch(GOOGLE_SHEET_URL, { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }).catch(function(){});
+    }
+
+    // ═══════════════════ تقرير أسبوعي ═══════════════════
+    var weeklyData = JSON.parse(localStorage.getItem('elh_weekly_data') || '{"weekStart":"","students":{}}');
+    function sendWeeklyReport() {
+        var report = '📊 تقرير ELH الأسبوعي\n👥 الطلاب: ' + Object.keys(weeklyData.students).length + '\n🤝 شركاء في بناء الإنسان';
+        window.open('mailto:' + ADMIN_EMAIL + '?subject=تقرير ELH الأسبوعي&body=' + encodeURIComponent(report), '_blank');
+    }
+    function checkWeeklyReport() {
+        var now = new Date();
+        var lastSent = localStorage.getItem('elh_last_weekly_report');
+        var today = now.toISOString().split('T')[0];
+        if (now.getDay() === 0 && lastSent !== today) { sendWeeklyReport(); localStorage.setItem('elh_last_weekly_report', today); }
+    }
+    setInterval(checkWeeklyReport, 3600000);
+
+    console.log('✅ ELH - English Learning Hub جاهز 🤝 شركاء في بناء الإنسان');
+</script>
+</body>
+</html>
+1
