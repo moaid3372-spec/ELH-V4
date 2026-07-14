@@ -168,19 +168,13 @@
             <input type="text" placeholder="اسم المستخدم *" style="width:100%; padding:12px; margin:6px 0; border-radius:10px; border:2px solid var(--border);">
             <input type="password" placeholder="كلمة المرور *" style="width:100%; padding:12px; margin:6px 0; border-radius:10px; border:2px solid var(--border);">
             <select style="width:100%; padding:12px; margin:6px 0; border-radius:10px; border:2px solid var(--border); background:#fff;">
-    <option>اختر الصف *</option>
-    <option>Primary 1</option>
-    <option>Primary 2</option>
-    <option>Primary 3</option>
-    <option>Primary 4</option>
-    <option>Primary 5</option>
-    <option>Primary 6</option>
-    <option>Prep 1</option>
-    <option>Prep 2</option>
-    <option>Prep 3</option>
-</select>
+                <option>اختر الصف *</option>
+                <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
+                <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+                <option>Prep 1</option><option>Prep 2</option><option>Prep 3</option>
+            </select>
             <input type="tel" placeholder="رقم الواتساب *" style="width:100%; padding:12px; margin:6px 0; border-radius:10px; border:2px solid var(--border);">
-            <button class="btn btn-primary" style="width:100%; margin-top:10px; padding:14px;" onclick="navigateTo('dashboard'); showToast('✅ تم التسجيل! أهلاً بك في ELH');">إنشاء الحساب</button>
+            <button class="btn btn-primary" style="width:100%; margin-top:10px; padding:14px;" onclick="handleSignup()">إنشاء الحساب</button>
             <p style="text-align:center; margin-top:12px; font-size:0.9rem;">لديك حساب؟ <a href="#" onclick="navigateTo('signin')" style="color:var(--primary);">دخول</a></p>
         </div>
     </div>
@@ -205,8 +199,8 @@
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
             <div style="width:55px; height:55px; border-radius:50%; background:var(--primary); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem;">👦</div>
             <div>
-                <h2>أهلاً، أحمد!</h2>
-                <p style="color:var(--text-muted);">الصف الرابع | ⭐ 1,250 XP | المستوى 5</p>
+                <h2 id="dashName">أهلاً!</h2>
+                <p style="color:var(--text-muted);" id="dashInfo">⭐ 0 XP | المستوى 1</p>
             </div>
         </div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:12px;">
@@ -230,23 +224,14 @@
         <button class="btn btn-ghost btn-sm" onclick="navigateTo('dashboard')">← العودة للوحة التحكم</button>
         <div style="text-align:center; margin:20px 0;">
             <div style="width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #0b9fa0); display:flex; align-items:center; justify-content:center; color:#fff; font-size:2.8rem; margin:0 auto; box-shadow:0 10px 30px rgba(13,123,126,0.3);">👦</div>
-            <h2 style="font-family:var(--font-display); margin-top:12px;">أحمد محمد</h2>
+            <h2 style="font-family:var(--font-display); margin-top:12px;" id="profileName">أحمد محمد</h2>
             <p style="color:var(--text-muted);">الصف الرابع الابتدائي</p>
-            <p>⭐ 1,250 XP | المستوى 5 | 🏆 8 شارات</p>
+            <p>⭐ <span id="profileXP">1,250</span> XP | المستوى <span id="profileLevel">5</span> | 🏆 8 شارات</p>
             <div class="progress-bar" style="margin:12px 0;"><div class="progress-fill" style="width:65%;"></div></div>
             <p style="font-size:0.8rem; color:var(--text-muted);">350 XP للمستوى التالي</p>
         </div>
         <div class="card"><h3>📊 إحصائياتي</h3><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;"><p>📚 الدروس: <strong>45</strong></p><p>📖 القصص: <strong>8</strong></p><p>🎮 الألعاب: <strong>24</strong></p><p>⚡ التحديات: <strong>12</strong></p><p>⏱️ وقت التعلم: <strong>120 ساعة</strong></p><p>🔥 أيام متتالية: <strong>15 يوم</strong></p></div></div>
         <div class="card" style="margin-top:12px;"><h3>🏆 شاراتي</h3><div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; font-size:2rem;"><span>🌱</span><span>⭐</span><span>📖</span><span>🔥</span><span>🗺️</span><span>🧠</span><span>🤝</span><span>🌟</span></div></div>
-        <div class="card" style="margin-top:12px;"><h3>🎯 مهاراتي</h3>
-            <div><div style="display:flex;justify-content:space-between"><span>مفردات</span><span>85%</span></div><div class="progress-bar"><div class="progress-fill" style="width:85%"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between"><span>قواعد</span><span>70%</span></div><div class="progress-bar"><div class="progress-fill" style="width:70%;background:#f0a03a"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between"><span>قراءة</span><span>80%</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--success)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between"><span>كتابة</span><span>65%</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--accent)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between"><span>استماع</span><span>75%</span></div><div class="progress-bar"><div class="progress-fill" style="width:75%;background:var(--secondary)"></div></div></div>
-            <div><div style="display:flex;justify-content:space-between"><span>تحدث</span><span>60%</span></div><div class="progress-bar"><div class="progress-fill" style="width:60%;background:var(--gold)"></div></div></div>
-        </div>
-        <div class="card" style="margin-top:12px;"><h3>👨‍👩‍👧 معلومات ولي الأمر</h3><p>📱 رقم الواتساب: +20 1XX XXX XXXX</p><p style="color:var(--text-muted); font-size:0.85rem;">📲 النتائج والتقارير ترسل تلقائياً</p></div>
     </div>
 </div>
 
@@ -254,34 +239,11 @@
 <div class="page" id="page-stories">
     <div style="padding:100px 20px 40px; max-width:800px; margin:0 auto;">
         <button class="btn btn-ghost btn-sm" onclick="navigateTo('dashboard')">← العودة للوحة التحكم</button>
-        <div style="text-align:center; margin:20px 0;">
-            <div style="font-size:4rem;">📖</div>
-            <h2 style="font-family:var(--font-display);">عالم القصص التفاعلية</h2>
-            <p style="color:var(--text-muted);">قصص مصرية تأخذك في مغامرات تعليمية</p>
-        </div>
+        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">📖</div><h2>عالم القصص التفاعلية</h2></div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr)); gap:16px;">
-            <div class="card" style="border-right:4px solid var(--secondary);">
-                <div style="display:flex; justify-content:space-between; align-items:center;"><h3>سر السوق القديم</h3><span class="badge" style="background:var(--secondary-light);">الفصل 3 من 5</span></div>
-                <p style="color:var(--text-muted); font-size:0.85rem;">نور يكتشف خريطة غامضة في سوق الخميس مع جده عم شعبان</p>
-                <div style="margin:8px 0;"><span class="badge" style="background:var(--primary-light);">🗺️ مغامرة</span><span class="badge" style="background:var(--gold-light);">⭐ +100 XP</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:60%; background:var(--secondary);"></div></div>
-                <p style="font-size:0.75rem; color:var(--text-muted);">60% مكتمل</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:8px; background:var(--secondary);" onclick="openStory('market')">📕 اقرأ الآن</button>
-            </div>
-            <div class="card" style="border-right:4px solid var(--primary);">
-                <div style="display:flex; justify-content:space-between; align-items:center;"><h3>رحلة إلى أسوان</h3><span class="badge" style="background:var(--primary-light);">الفصل 1 من 4</span></div>
-                <p style="color:var(--text-muted); font-size:0.85rem;">مغامرة على ضفاف النيل الخالد مع المرشد النوبي كابتن محمود</p>
-                <div style="margin:8px 0;"><span class="badge" style="background:var(--success-light);">🏛️ تاريخ</span><span class="badge" style="background:var(--gold-light);">⭐ +150 XP</span></div>
-                <button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="openStory('aswan')">📕 ابدأ القصة</button>
-            </div>
-            <div class="card" style="border-right:4px solid var(--success);">
-                <div style="display:flex; justify-content:space-between; align-items:center;"><h3>مغامرة في القاهرة</h3><span class="badge" style="background:var(--success-light);">الفصل 2 من 6</span></div>
-                <p style="color:var(--text-muted); font-size:0.85rem;">أسرار خان الخليلي تنتظر من يكتشفها مع أمينة وعلي</p>
-                <div style="margin:8px 0;"><span class="badge" style="background:var(--accent-light);">🔍 غموض</span><span class="badge" style="background:var(--gold-light);">⭐ +200 XP</span></div>
-                <div class="progress-bar"><div class="progress-fill" style="width:33%; background:var(--success);"></div></div>
-                <p style="font-size:0.75rem; color:var(--text-muted);">33% مكتمل</p>
-                <button class="btn btn-primary btn-sm" style="margin-top:8px; background:var(--success);" onclick="openStory('cairo')">📕 استمرار</button>
-            </div>
+            <div class="card" style="border-right:4px solid var(--secondary);"><h3>سر السوق القديم</h3><span class="badge" style="background:var(--secondary-light);">الفصل 3 من 5</span><p style="color:var(--text-muted);">نور يكتشف خريطة غامضة في سوق الخميس</p><button class="btn btn-primary btn-sm" style="margin-top:8px; background:var(--secondary);" onclick="openStory('market')">📕 اقرأ الآن</button></div>
+            <div class="card" style="border-right:4px solid var(--primary);"><h3>رحلة إلى أسوان</h3><span class="badge" style="background:var(--primary-light);">الفصل 1 من 4</span><p style="color:var(--text-muted);">مغامرة على ضفاف النيل الخالد</p><button class="btn btn-primary btn-sm" style="margin-top:8px;" onclick="openStory('aswan')">📕 ابدأ القصة</button></div>
+            <div class="card" style="border-right:4px solid var(--success);"><h3>مغامرة في القاهرة</h3><span class="badge" style="background:var(--success-light);">الفصل 2 من 6</span><p style="color:var(--text-muted);">أسرار خان الخليلي تنتظر</p><button class="btn btn-primary btn-sm" style="margin-top:8px; background:var(--success);" onclick="openStory('cairo')">📕 استمرار</button></div>
         </div>
         <div id="storyArea" style="display:none; margin-top:20px;"></div>
     </div>
@@ -291,14 +253,28 @@
 <div class="page" id="page-games">
     <div style="padding:100px 20px 40px; max-width:800px; margin:0 auto;">
         <button class="btn btn-ghost btn-sm" onclick="navigateTo('dashboard')">← العودة للوحة التحكم</button>
-        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">🎮</div><h2 style="font-family:var(--font-display);">مركز الألعاب التعليمية</h2><p style="color:var(--text-muted);">تعلم باللعب — بدون إدمان، بتحفيز صحي</p></div>
+        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">🎮</div><h2>مركز الألعاب التعليمية</h2></div>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:16px;">
-            <div class="card" style="text-align:center; border-top:4px solid var(--primary);"><div style="font-size:3rem;">⚡</div><h3>تحدي المفردات</h3><p style="color:var(--text-muted); font-size:0.85rem;">أجب عن 10 كلمات في أسرع وقت</p><div style="margin:8px 0;"><span class="badge" style="background:var(--primary-light);">⏱️ 5 دقائق</span><span class="badge" style="background:var(--gold-light);">+50 🪙</span></div><button class="btn btn-primary btn-sm" onclick="startGame('vocab')">▶️ ابدأ</button></div>
-            <div class="card" style="text-align:center; border-top:4px solid var(--secondary);"><div style="font-size:3rem;">🧠</div><h3>صياد القواعد</h3><p style="color:var(--text-muted); font-size:0.85rem;">اختبر معلوماتك في قواعد اللغة</p><div style="margin:8px 0;"><span class="badge" style="background:var(--secondary-light);">⏱️ 8 دقائق</span><span class="badge" style="background:var(--gold-light);">+30 🪙</span></div><button class="btn btn-primary btn-sm" style="background:var(--secondary);" onclick="startGame('grammar')">▶️ ابدأ</button></div>
-            <div class="card" style="text-align:center; border-top:4px solid var(--success);"><div style="font-size:3rem;">🏆</div><h3>سباق التحدث</h3><p style="color:var(--text-muted); font-size:0.85rem;">انطق الكلمات بشكل صحيح</p><div style="margin:8px 0;"><span class="badge" style="background:var(--success-light);">⏱️ 10 دقائق</span><span class="badge" style="background:var(--gold-light);">+2 💎</span></div><button class="btn btn-primary btn-sm" style="background:var(--success);" onclick="startGame('speak')">▶️ ابدأ</button></div>
-            <div class="card" style="text-align:center; border-top:4px solid var(--accent);"><div style="font-size:3rem;">🃏</div><h3>لعبة الذاكرة</h3><p style="color:var(--text-muted); font-size:0.85rem;">طابق الكلمات مع معانيها</p><div style="margin:8px 0;"><span class="badge" style="background:var(--accent-light);">⏱️ 7 دقائق</span><span class="badge" style="background:var(--gold-light);">+40 🪙</span></div><button class="btn btn-primary btn-sm" style="background:var(--accent);" onclick="startGame('memory')">▶️ ابدأ</button></div>
+            <div class="card" style="text-align:center; border-top:4px solid var(--primary);"><h3>⚡ تحدي المفردات</h3><span class="badge" style="background:var(--gold-light);">+50 🪙</span><button class="btn btn-primary btn-sm" onclick="startGame('vocab')">▶️ ابدأ</button></div>
+            <div class="card" style="text-align:center; border-top:4px solid var(--secondary);"><h3>🧠 صياد القواعد</h3><span class="badge" style="background:var(--gold-light);">+30 🪙</span><button class="btn btn-primary btn-sm" style="background:var(--secondary);" onclick="startGame('grammar')">▶️ ابدأ</button></div>
+            <div class="card" style="text-align:center; border-top:4px solid var(--success);"><h3>🏆 سباق التحدث</h3><span class="badge" style="background:var(--gold-light);">+2 💎</span><button class="btn btn-primary btn-sm" style="background:var(--success);" onclick="startGame('speak')">▶️ ابدأ</button></div>
+            <div class="card" style="text-align:center; border-top:4px solid var(--accent);"><h3>🃏 لعبة الذاكرة</h3><span class="badge" style="background:var(--gold-light);">+40 🪙</span><button class="btn btn-primary btn-sm" style="background:var(--accent);" onclick="startGame('memory')">▶️ ابدأ</button></div>
         </div>
         <div id="gameArea" style="display:none; margin-top:20px;"></div>
+    </div>
+</div>
+
+<!-- Placement (تحدي المستوى) -->
+<div class="page" id="page-placement">
+    <div style="padding:100px 20px 40px; max-width:650px; margin:0 auto;">
+        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">🧪</div><h2>تحدي المستوى</h2><p style="color:var(--text-muted);">أجب عن الأسئلة لنحدد مستواك</p></div>
+        <div id="placementArea">
+            <div class="card"><p><strong>١. ما معنى "Happy"؟</strong></p><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,1,0)" style="display:block;width:100%;margin:4px 0;text-align:right;">😊 سعيد</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,1,1)" style="display:block;width:100%;margin:4px 0;text-align:right;">😢 حزين</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,1,2)" style="display:block;width:100%;margin:4px 0;text-align:right;">😠 غاضب</button></div>
+            <div class="card"><p><strong>٢. أكمل: "I ___ happy."</strong></p><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,2,0)" style="display:block;width:100%;margin:4px 0;text-align:right;">am</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,2,1)" style="display:block;width:100%;margin:4px 0;text-align:right;">is</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,2,2)" style="display:block;width:100%;margin:4px 0;text-align:right;">are</button></div>
+            <div class="card"><p><strong>٣. ما معنى "Book"؟</strong></p><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,3,0)" style="display:block;width:100%;margin:4px 0;text-align:right;">📖 كتاب</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,3,1)" style="display:block;width:100%;margin:4px 0;text-align:right;">✏️ قلم</button><button class="btn btn-outline btn-sm" onclick="selectPlacement(this,3,2)" style="display:block;width:100%;margin:4px 0;text-align:right;">🏫 مدرسة</button></div>
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="finishPlacement()" style="width:100%; margin-top:16px; padding:16px;">🏁 إنهاء تحدي المستوى</button>
+        <div id="placementResult" style="display:none; text-align:center; margin-top:20px; padding:24px; background:var(--surface); border-radius:var(--radius);"></div>
     </div>
 </div>
 
@@ -306,7 +282,7 @@
 <div class="page" id="page-challenge">
     <div style="padding:100px 20px 40px; max-width:650px; margin:0 auto;">
         <button class="btn btn-ghost btn-sm" onclick="navigateTo('dashboard')">← العودة</button>
-        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">⚡</div><h2>تحدي الوحدة الثالثة</h2><p style="color:var(--text-muted);">أجب عن 5 أسئلة. بالتوفيق!</p></div>
+        <div style="text-align:center; margin:20px 0;"><div style="font-size:4rem;">⚡</div><h2>تحدي الوحدة الثالثة</h2></div>
         <div id="challengeArea">
             <div class="card"><p><strong>١. ما معنى "Elephant"؟</strong></p><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,1,0)" style="display:block;width:100%;margin:4px 0;text-align:right;">🐘 فيل</button><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,1,1)" style="display:block;width:100%;margin:4px 0;text-align:right;">🦁 أسد</button><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,1,2)" style="display:block;width:100%;margin:4px 0;text-align:right;">🐅 نمر</button></div>
             <div class="card"><p><strong>٢. أكمل: "I ___ a student."</strong></p><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,2,0)" style="display:block;width:100%;margin:4px 0;text-align:right;">am</button><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,2,1)" style="display:block;width:100%;margin:4px 0;text-align:right;">is</button><button class="btn btn-outline btn-sm" onclick="selectAnswer(this,2,2)" style="display:block;width:100%;margin:4px 0;text-align:right;">are</button></div>
@@ -323,256 +299,4 @@
 <div class="nour-widget">
     <div class="nour-chat" id="nourChat">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;"><strong>🧑‍🏫 نور - معلمك الذكي</strong><button onclick="toggleNour()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">✕</button></div>
-        <div id="nourMessages" style="max-height:200px; overflow-y:auto;"><div class="nour-msg nour">👋 أهلاً! أنا نور. اسألني أي شيء عن التعلم!</div></div>
-        <div class="nour-input"><input type="text" id="nourInput" placeholder="اسأل نور..." onkeydown="if(event.key==='Enter') sendToNour()"><button onclick="sendToNour()">📤</button><button onclick="startVoice()">🎤</button></div>
-    </div>
-    <div class="nour-avatar" onclick="toggleNour()">🧑‍🏫<div class="nour-dot"></div></div>
-</div>
-
-<!-- Toast -->
-<div class="toast" id="toast"></div>
-
-<script>
-    const state = { 
-        studentName: 'أحمد',
-        grade: 'Primary 4',
-        xp: 1250, 
-        level: 5,
-        coins: 350,
-        gems: 12,
-        lessonsDone: 45,
-        storiesDone: 8,
-        gamesDone: 24,
-        challengesDone: 12,
-        challengeAnswers: {}
-    };
-
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbx7z8QeADQLw-rc3aNfESEI-XjtBLKtAdi1cR_RszX_a77qxOcJu6CnSO11174enzhk/exec';
-    const ADMIN_EMAIL = 'moaid3372@gmail.com';
-
-    function navigateTo(page) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById('page-' + page);
-        if (target) target.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function showToast(msg) {
-        const toast = document.getElementById('toast');
-        toast.textContent = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function selectAnswer(btn, qNum, ansIdx) {
-        const siblings = btn.parentElement.querySelectorAll('button');
-        siblings.forEach(b => { b.style.background = ''; b.style.borderColor = 'var(--border)'; });
-        btn.style.background = 'var(--primary-light)';
-        btn.style.borderColor = 'var(--primary)';
-        state.challengeAnswers[qNum] = ansIdx;
-    }
-
-    function submitChallenge() {
-        const correct = { 1:0, 2:0, 3:0, 4:0, 5:0 };
-        let score = 0;
-        for (let i = 1; i <= 5; i++) { if (state.challengeAnswers[i] === correct[i]) score++; }
-        const pct = Math.round((score / 5) * 100);
-        document.getElementById('challengeArea').style.display = 'none';
-        document.querySelector('#page-challenge .btn-primary.btn-lg').style.display = 'none';
-        const result = document.getElementById('challengeResult');
-        result.style.display = 'block';
-        if (pct >= 85) {
-            result.innerHTML = '<div style="font-size:5rem;">🏆</div><h2 style="color:var(--success);">تهانينا! أنت بطل!</h2><p style="font-size:1.5rem;">نتيجتك: <strong>' + pct + '%</strong></p><p>أجبت على ' + score + ' من 5</p><p style="color:var(--success);">🎉 لقد تفوقت!</p><button class="btn btn-primary" onclick="navigateTo(\'dashboard\')">🏠 العودة</button>';
-        } else {
-            result.innerHTML = '<div style="font-size:5rem;">💪</div><h2 style="color:var(--primary);">أحسنت!</h2><p>نتوقع منك المزيد.</p><p>أنت على الطريق الصحيح.</p><p style="color:var(--text-muted);">📲 تم إرسال التقرير لولي الأمر</p><button class="btn btn-primary" onclick="navigateTo(\'dashboard\')">🏠 العودة</button>';
-        }
-        sendToGoogleSheets(state.studentName, 'تحدي', 'أنهى تحدي الوحدة الثالثة - ' + pct + '%');
-    }
-
-    function toggleNour() { document.getElementById('nourChat').classList.toggle('open'); }
-
-    function sendToNour() {
-        const input = document.getElementById('nourInput');
-        const msg = input.value.trim();
-        if (!msg) return;
-        addNourMessage('أنت', msg, 'user');
-        input.value = '';
-        setTimeout(() => {
-            const reply = getNourReply(msg);
-            addNourMessage('نور', reply, 'nour');
-            if ('speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(reply); u.lang = 'ar-SA'; u.rate = 0.9; window.speechSynthesis.speak(u); }
-        }, 800);
-    }
-
-    function addNourMessage(sender, text, type) {
-        const container = document.getElementById('nourMessages');
-        const div = document.createElement('div');
-        div.className = 'nour-msg ' + (type === 'nour' ? 'nour' : '');
-        div.innerHTML = '<strong>' + sender + ':</strong> ' + text;
-        container.appendChild(div);
-        container.scrollTop = container.scrollHeight;
-    }
-
-    function getNourReply(q) {
-        q = q.toLowerCase();
-        if (q.includes('معنى')||q.includes('يعني')) return 'أسأل عن أي كلمة وأنا أشرحها لك! 📖';
-        if (q.includes('قاعدة')||q.includes('grammar')) return 'القواعد زي أساس البيت. 🏠';
-        if (q.includes('تحدي')||q.includes('challenge')) return 'التحديات فرصة تثبت إنك بطل! 💪';
-        if (q.includes('خائف')||q.includes('صعب')||q.includes('help')) return 'متقلقش! أنا معك. 🤝';
-        if (q.includes('شكراً')||q.includes('thanks')) return 'الشكر لله يا بطل! ❤️';
-        if (q.includes('اسمك')) return 'اسمي نور، الضوء اللي بينور طريقك. 🌟';
-        return 'سؤال جميل! إسألني أي حاجة! 🌟';
-    }
-
-    function startVoice() {
-        if (!('webkitSpeechRecognition' in window)) { addNourMessage('نور', '🎤 الميكروفون غير مدعوم.', 'nour'); return; }
-        const r = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        r.lang = 'ar-SA';
-        r.onresult = function(e) { document.getElementById('nourInput').value = e.results[0][0].transcript; sendToNour(); };
-        r.onerror = function() { addNourMessage('نور', '🎤 لم أسمعك.', 'nour'); };
-        r.start();
-        addNourMessage('نور', '🎤 أنا أستمع... تكلم!', 'nour');
-    }
-
-    function openStory(type) {
-        var area = document.getElementById('storyArea');
-        if (!area) return;
-        area.style.display = 'block';
-        if (type === 'market') {
-            area.innerHTML = '<div class="card" style="text-align:right;"><h3>📖 سر السوق القديم - الفصل 3</h3><p style="font-style:italic; color:var(--text-light);">دخل نور إلى دكان العم سيد. كان الصندوق الخشبي موضوعاً على الرف العالي. قال جده عم شعبان: "هذا الصندوق كان يخص جدك الأكبر. يقولون إن فيه سراً قديماً."</p><p style="margin-top:12px;"><strong>ماذا ستفعل؟</strong></p><button class="btn btn-outline btn-sm" onclick="storyChoice(\'market\', \'search\')">🔍 أبحث عن الكنز فوراً</button> <button class="btn btn-outline btn-sm" onclick="storyChoice(\'market\', \'ask\')">🤔 أسأل جدي عن المزيد</button><p id="storyFeedback" style="margin-top:8px; font-weight:bold;"></p></div>';
-        } else if (type === 'aswan') {
-            area.innerHTML = '<div class="card" style="text-align:right;"><h3>📖 رحلة إلى أسوان - الفصل 1</h3><p style="font-style:italic; color:var(--text-light);">وصل نور إلى أسوان مع أمينة. هناك التقيا بكابتن محمود، المرشد النوبي الذي يعرف كل أسرار النيل. قال لهما: "النيل ليس مجرد نهر. إنه شريان الحياة لمصر."</p><p style="margin-top:12px;"><strong>ماذا ستفعل؟</strong></p><button class="btn btn-outline btn-sm" onclick="storyChoice(\'aswan\', \'sail\')">🚣 أبحر في النيل</button> <button class="btn btn-outline btn-sm" onclick="storyChoice(\'aswan\', \'temple\')">🏛️ أزور معبد فيلة</button><p id="storyFeedback" style="margin-top:8px; font-weight:bold;"></p></div>';
-        } else if (type === 'cairo') {
-            area.innerHTML = '<div class="card" style="text-align:right;"><h3>📖 مغامرة في القاهرة - الفصل 2</h3><p style="font-style:italic; color:var(--text-light);">في خان الخليلي، قابل نور وأمينة تاجراً عجوزاً قال لهما: "الكنز الذي تبحثان عنه ليس ذهباً. إنه المعرفة." وأشار إلى مكتبة قديمة مخفية خلف أحد الدكاكين.</p><p style="margin-top:12px;"><strong>ماذا ستفعل؟</strong></p><button class="btn btn-outline btn-sm" onclick="storyChoice(\'cairo\', \'enter\')">📚 أدخل المكتبة</button> <button class="btn btn-outline btn-sm" onclick="storyChoice(\'cairo\', \'askMore\')">💬 أسأل التاجر أكثر</button><p id="storyFeedback" style="margin-top:8px; font-weight:bold;"></p></div>';
-        }
-        area.scrollIntoView({ behavior: 'smooth' });
-        sendToGoogleSheets(state.studentName, 'قصة', type);
-    }
-
-    function storyChoice(story, choice) {
-        var fb = document.getElementById('storyFeedback');
-        if (!fb) return;
-        if (choice === 'search' || choice === 'sail' || choice === 'enter') {
-            fb.innerHTML = '<span style="color:var(--success);">✅ اختيار رائع! +20 XP</span>';
-            showToast('✅ اختيار رائع! +20 XP');
-        } else {
-            fb.innerHTML = '<span style="color:var(--primary);">🤔 اختيار حكيم! +15 XP</span>';
-            showToast('🤔 اختيار حكيم! +15 XP');
-        }
-    }
-
-    function startGame(type) {
-        var area = document.getElementById('gameArea');
-        if (!area) return;
-        area.style.display = 'block';
-        if (type === 'vocab') {
-            area.innerHTML = '<div class="card" style="text-align:center;"><h3>⚡ تحدي المفردات</h3><p>ما معنى "Apple"؟</p><div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:12px 0;"><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, true)">🍎 تفاحة</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, false)">🍌 موز</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, false)">🍇 عنب</button></div><p id="gameFeedback"></p></div>';
-        } else if (type === 'grammar') {
-            area.innerHTML = '<div class="card" style="text-align:center;"><h3>🧠 صياد القواعد</h3><p>أكمل: "She ___ a teacher."</p><div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:12px 0;"><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, true)">is</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, false)">am</button><button class="btn btn-outline btn-sm" onclick="checkGameAnswer(this, false)">are</button></div><p id="gameFeedback"></p></div>';
-        } else if (type === 'speak') {
-            area.innerHTML = '<div class="card" style="text-align:center;"><h3>🏆 سباق التحدث</h3><p>انطق كلمة "School"</p><button class="btn btn-primary" onclick="document.getElementById(\'gameFeedback\').innerHTML=\'<span style=color:var(--success)>✅ أحسنت النطق! +2 💎</span>\'">🎤 اضغط للتحدث</button><p id="gameFeedback" style="margin-top:8px;"></p></div>';
-        } else if (type === 'memory') {
-            area.innerHTML = '<div class="card" style="text-align:center;"><h3>🃏 لعبة الذاكرة</h3><p>طابق الكلمة مع معناها</p><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;"><button class="btn btn-outline btn-sm" onclick="this.style.background=\'var(--primary-light)\'">Book</button><button class="btn btn-outline btn-sm" onclick="this.style.background=\'var(--success-light)\'">كتاب</button><button class="btn btn-outline btn-sm" onclick="this.style.background=\'var(--success-light)\'">قلم</button><button class="btn btn-outline btn-sm" onclick="this.style.background=\'var(--primary-light)\'">Pen</button></div><p id="gameFeedback"></p></div>';
-        }
-        area.scrollIntoView({ behavior: 'smooth' });
-        sendToGoogleSheets(state.studentName, 'لعبة', type);
-    }
-
-    function checkGameAnswer(btn, isCorrect) {
-        var feedback = document.getElementById('gameFeedback');
-        if (!feedback) return;
-        if (isCorrect) {
-            btn.style.background = 'var(--success-light)';
-            btn.style.borderColor = 'var(--success)';
-            feedback.innerHTML = '<span style="color:var(--success); font-weight:bold;">✅ إجابة صحيحة! +10 XP</span>';
-            showToast('✅ إجابة صحيحة! +10 XP');
-        } else {
-            btn.style.background = 'var(--accent-light)';
-            btn.style.borderColor = 'var(--accent)';
-            feedback.innerHTML = '<span style="color:var(--accent);">❌ حاول مرة أخرى</span>';
-        }
-    }
-
-    // ═══════════════════ تحليل الأداء ═══════════════════
-    function generatePerformanceAnalysis() {
-        var xp = state.xp || 0;
-        var level = state.level || 1;
-        var total = (state.lessonsDone||0) + (state.storiesDone||0) + (state.gamesDone||0) + (state.challengesDone||0);
-        var cefr = level >= 7 ? 'B1' : level >= 5 ? 'A2' : level >= 3 ? 'A1' : 'Pre-A1';
-        var engagement = total > 50 ? 'مرتفع جداً' : total > 25 ? 'مرتفع' : total > 10 ? 'متوسط' : 'منخفض';
-        var mastery = xp > 2000 ? '85%+' : xp > 1000 ? '70-84%' : xp > 500 ? '50-69%' : '<50%';
-        return { cefr, engagement, mastery, total, xp, level };
-    }
-
-    function sendToGoogleSheets(studentName, activity, details) {
-        var analysis = generatePerformanceAnalysis();
-        var studentRec = '💡 *للطالب:* استمر في التعلم. راجع المفردات أسبوعياً. تحدث بالإنجليزية 5 دقائق يومياً.';
-        var teacherRec = '👩‍🏫 *للمعلم:* قدم تغذية راجعة إيجابية. أشرك ولي الأمر. حدد أهدافاً أسبوعية صغيرة.';
-        
-        var data = {
-            studentName: studentName || 'طالب',
-            grade: state.grade || 'غير محدد',
-            xp: state.xp,
-            level: state.level,
-            activity: activity,
-            details: details,
-            cefr: analysis.cefr,
-            engagement: analysis.engagement,
-            mastery: analysis.mastery,
-            recommendations: studentRec + '\n' + teacherRec
-        };
-        
-        fetch(GOOGLE_SHEET_URL, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: { 'Content-Type': 'application/json' }
-        }).catch(function() {});
-    }
-
-    // ═══════════════════ التقرير الأسبوعي ═══════════════════
-    var weeklyData = JSON.parse(localStorage.getItem('elh_weekly_data') || '{"weekStart":"","students":{},"history":[]}');
-    
-    function updateWeeklyData() {
-        var studentKey = state.studentName || 'طالب';
-        if (!weeklyData.students[studentKey]) {
-            weeklyData.students[studentKey] = { name: studentKey, grade: state.grade, activitiesThisWeek: 0, lastActive: '' };
-        }
-        weeklyData.students[studentKey].activitiesThisWeek++;
-        weeklyData.students[studentKey].lastActive = new Date().toISOString();
-        var now = new Date();
-        var weekStart = new Date(now.setDate(now.getDate() - now.getDay())).toISOString().split('T')[0];
-        if (weeklyData.weekStart !== weekStart) {
-            weeklyData.weekStart = weekStart;
-            Object.keys(weeklyData.students).forEach(function(k) { weeklyData.students[k].activitiesThisWeek = 0; });
-        }
-        localStorage.setItem('elh_weekly_data', JSON.stringify(weeklyData));
-    }
-
-    function sendWeeklyReport() {
-        var report = '📊 *التقرير الأسبوعي - ELH*\n📅 ' + weeklyData.weekStart + '\n👥 الطلاب: ' + Object.keys(weeklyData.students).length + '\n🤝 ELH - شركاء في بناء الإنسان';
-        var subject = 'تقرير ELH الأسبوعي - ' + weeklyData.weekStart;
-        var mailtoLink = 'mailto:' + ADMIN_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(report);
-        window.open(mailtoLink, '_blank');
-    }
-
-    function checkWeeklyReport() {
-        var now = new Date();
-        var lastSent = localStorage.getItem('elh_last_weekly_report');
-        var today = now.toISOString().split('T')[0];
-        if (now.getDay() === 0 && lastSent !== today) {
-            sendWeeklyReport();
-            localStorage.setItem('elh_last_weekly_report', today);
-        }
-    }
-
-    setInterval(checkWeeklyReport, 3600000);
-    checkWeeklyReport();
-    updateWeeklyData();
-
-    console.log('✅ ELH - English Learning Hub جاهز');
-    console.log('📊 Google Sheets متصل');
-    console.log('📧 تقارير أسبوعية مفعلة');
-    console.log('🤝 شركاء في بناء الإنسان');
-</script>
-</body>
-</html>
+        <div id="nourMessages" style="max-height:200px; overflow-y:auto;"><div class="nour-msg nour">👋 أهلاً! أنا نور. اسأ
